@@ -27,7 +27,7 @@ class StripeSubscriptionsController extends Controller
 
         return [
             'subscription' => $this->formatSubscription($subscription),
-            'plans' => $this->formatPlans(Plan::all(['limit' => 100])),
+            'plans' => $this->formatPlans(Plan::where('active', true)->take(100)->get()),
             'invoices' => $this->formatInvoices($subscription->owner->invoicesIncludingPending()),
         ];
     }
