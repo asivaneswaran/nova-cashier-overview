@@ -27,7 +27,7 @@ class StripeSubscriptionsController extends Controller
 
         return [
             'subscription' => $this->formatSubscription($subscription),
-            'plans' => $this->formatPlans(Plan::where('active', true)->take(100)->get()),
+            'plans' => $this->formatPlans(Plan::all(['limit' => 100])),
             'invoices' => $this->formatInvoices($subscription->owner->invoicesIncludingPending()),
         ];
     }
@@ -116,14 +116,16 @@ class StripeSubscriptionsController extends Controller
     protected function formatPlans($plans)
     {
         return collect($plans->data)->map(function (Plan $plan) {
-            return [
-                'id' => $plan->id,
-                'name' => $plan->nickname,
-                'price' => $plan->amount,
-                'interval' => $plan->interval,
-                'currency' => $plan->currency,
-                'interval_count' => $plan->interval_count,
-            ];
+            if($plan->active) {
+                return [
+                    'id' => $plan->id,
+                    'name' => $plan->nickname,
+                    'price' => $plan->amount,
+                    'interval' => $plan->interval,
+                    'currency' => $plan->currency,
+                    'interval_count' => $plan->interval_count,
+                ];
+            }
         })->toArray();
     }
 
