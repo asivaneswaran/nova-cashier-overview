@@ -126,6 +126,7 @@ class StripeSubscriptionsController extends Controller
         return collect($plans->data)->map(function (Plan $plan) {
             return [
                 'id' => $plan->id,
+                'name' => $plan->nickname,
                 'price' => $plan->amount,
                 'interval' => $plan->interval,
                 'currency' => $plan->currency,
