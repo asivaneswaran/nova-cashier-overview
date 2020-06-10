@@ -36,7 +36,7 @@
         <select
           v-model="newPlan"
           class="form-control form-select">
-          <option 
+          <option
             value=""
             disabled="disabled"
             selected="selected">Choose New Plan</option>
