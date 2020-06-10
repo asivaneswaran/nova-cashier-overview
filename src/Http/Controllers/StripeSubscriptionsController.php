@@ -19,7 +19,7 @@ class StripeSubscriptionsController extends Controller
     {
         $subscription = $this->getSubscription($subscriptionId);
 
-        if (! $subscription) {
+        if (!$subscription) {
             return [
                 'subscription' => null,
             ];
@@ -27,8 +27,8 @@ class StripeSubscriptionsController extends Controller
 
         return [
             'subscription' => $this->formatSubscription($subscription),
-            'plans' => $this->formatPlans(Plan::all(['limit' => 100])),
-            'invoices' => $this->formatInvoices($subscription->owner->invoicesIncludingPending()),
+            'plans'        => $this->formatPlans(Plan::all(['limit' => 100])),
+            'invoices'     => $this->formatInvoices($subscription->owner->invoicesIncludingPending()),
         ];
     }
 
@@ -77,7 +77,7 @@ class StripeSubscriptionsController extends Controller
     }
 
     /**
-     * @param \Laravel\Cashier\Subscription $subscription
+     * @param  \Laravel\Cashier\Subscription  $subscription
      * @return array
      * @throws \Stripe\Exception\ApiErrorException
      */
@@ -86,46 +86,44 @@ class StripeSubscriptionsController extends Controller
         $stripeSubscription = StripeSubscription::retrieve($subscription->stripe_id);
 
         return array_merge($subscription->toArray(), [
-            'plan_amount' => $stripeSubscription->plan->amount,
-            'plan_interval' => $stripeSubscription->plan->interval,
-            'plan_currency' => $stripeSubscription->plan->currency,
-            'plan' => $subscription->stripe_plan,
-            'stripe_plan' => $stripeSubscription->plan->nickname,
-            'ended' => $subscription->ended(),
-            'cancelled' => $subscription->cancelled(),
-            'active' => $subscription->active(),
-            'on_trial' => $subscription->onTrial(),
-            'on_grace_period' => $subscription->onGracePeriod(),
+            'plan_amount'           => $stripeSubscription->plan->amount,
+            'plan_interval'         => $stripeSubscription->plan->interval,
+            'plan_currency'         => $stripeSubscription->plan->currency,
+            'plan'                  => $subscription->stripe_plan,
+            'stripe_plan'           => $stripeSubscription->plan->nickname,
+            'ended'                 => $subscription->ended(),
+            'cancelled'             => $subscription->cancelled(),
+            'active'                => $subscription->active(),
+            'on_trial'              => $subscription->onTrial(),
+            'on_grace_period'       => $subscription->onGracePeriod(),
             'charges_automatically' => $stripeSubscription->billing == 'charge_automatically',
-            'created_at' => $this->formatDate($stripeSubscription->billing_cycle_anchor),
-            'ended_at' => $this->formatDate($stripeSubscription->ended_at),
-            'current_period_start' => $this->formatDate($stripeSubscription->current_period_start),
-            'current_period_end' => $this->formatDate($stripeSubscription->current_period_end),
-            'days_until_due' => $stripeSubscription->days_until_due,
-            'cancel_at_period_end' => $stripeSubscription->cancel_at_period_end,
-            'canceled_at' => $stripeSubscription->canceled_at,
+            'created_at'            => $this->formatDate($stripeSubscription->billing_cycle_anchor),
+            'ended_at'              => $this->formatDate($stripeSubscription->ended_at),
+            'current_period_start'  => $this->formatDate($stripeSubscription->current_period_start),
+            'current_period_end'    => $this->formatDate($stripeSubscription->current_period_end),
+            'days_until_due'        => $stripeSubscription->days_until_due,
+            'cancel_at_period_end'  => $stripeSubscription->cancel_at_period_end,
+            'canceled_at'           => $stripeSubscription->canceled_at,
         ]);
     }
 
     /**
      * Format the plans collection.
      *
-     * @param  \Stripe\Collection $plans
+     * @param  \Stripe\Collection  $plans
      * @return array
      */
     protected function formatPlans($plans)
     {
-        return collect($plans->data)->map(function (Plan $plan) {
-            if($plan->active) {
-                return [
-                    'id' => $plan->id,
-                    'name' => $plan->nickname,
-                    'price' => $plan->amount,
-                    'interval' => $plan->interval,
-                    'currency' => $plan->currency,
-                    'interval_count' => $plan->interval_count,
-                ];
-            }
+        return collect($plans->data)->where('active', true)->map(function (Plan $plan) {
+            return [
+                'id'             => $plan->id,
+                'name'           => $plan->nickname,
+                'price'          => $plan->amount,
+                'interval'       => $plan->interval,
+                'currency'       => $plan->currency,
+                'interval_count' => $plan->interval_count,
+            ];
         })->toArray();
     }
 
@@ -137,21 +135,21 @@ class StripeSubscriptionsController extends Controller
     {
         return collect($invoices)->map(function ($invoice) {
             return [
-                'id' => $invoice->id,
-                'total' => $invoice->total,
-                'attempted' => $invoice->attempted,
-                'charge_id' => $invoice->charge,
-                'currency' => $invoice->currency,
+                'id'           => $invoice->id,
+                'total'        => $invoice->total,
+                'attempted'    => $invoice->attempted,
+                'charge_id'    => $invoice->charge,
+                'currency'     => $invoice->currency,
                 'period_start' => $this->formatDate($invoice->period_start),
-                'period_end' => $this->formatDate($invoice->period_end),
-                'link' => $invoice->hosted_invoice_url,
+                'period_end'   => $this->formatDate($invoice->period_end),
+                'link'         => $invoice->hosted_invoice_url,
                 'subscription' => $invoice->subscription,
             ];
         })->toArray();
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      * @return string|null
      */
     protected function formatDate($value)
