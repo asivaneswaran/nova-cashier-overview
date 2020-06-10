@@ -17,12 +17,7 @@ class StripeSubscriptionsController extends Controller
      */
     public function show($subscriptionId)
     {
-        $stripeModel = env('CASHIER_SUBSCRIPTION_MODEL', Laravel\Cashier\Subscription::class);
-
-        /** @var \Illuminate\Database\Eloquent\Model $billableModel */
-        $subscriptionModel = (new $stripeModel());
-        /** @var \Laravel\Cashier\Subscription|\Illuminate\Database\Eloquent\Model $billable */
-        $subscription = $subscriptionModel->find($subscriptionId);
+        $subscription = $this->getSubscription($subscriptionId);
 
         if (! $subscription) {
             return [
@@ -44,8 +39,7 @@ class StripeSubscriptionsController extends Controller
      */
     public function update($subscriptionId)
     {
-        /** @var \Laravel\Cashier\Subscription $subscription */
-        $subscription = Subscription::findOrFail($subscriptionId);
+        $subscription = $this->getSubscription($subscriptionId);
 
         $subscription->swap($this->request->input('plan'));
 
@@ -58,8 +52,7 @@ class StripeSubscriptionsController extends Controller
      */
     public function cancel($subscriptionId)
     {
-        /** @var \Laravel\Cashier\Subscription $subscription */
-        $subscription = Subscription::findOrFail($subscriptionId);
+        $subscription = $this->getSubscription($subscriptionId);
 
         if ($this->request->input('now')) {
             $subscription->cancelNow();
@@ -76,8 +69,7 @@ class StripeSubscriptionsController extends Controller
      */
     public function resume($subscriptionId)
     {
-        /** @var \Laravel\Cashier\Subscription $subscription */
-        $subscription = Subscription::findOrFail($subscriptionId);
+        $subscription = $this->getSubscription($subscriptionId);
 
         $subscription->resume();
 
@@ -163,5 +155,20 @@ class StripeSubscriptionsController extends Controller
     protected function formatDate($value)
     {
         return $value ? Carbon::createFromTimestamp($value)->toDateTimeString() : null;
+    }
+
+    /**
+     * @param $subscriptionId
+     * @return mixed
+     */
+    private function getSubscription($subscriptionId)
+    {
+        $stripeModel = env('CASHIER_SUBSCRIPTION_MODEL', Laravel\Cashier\Subscription::class);
+
+        /** @var \Illuminate\Database\Eloquent\Model $billableModel */
+        $subscriptionModel = (new $stripeModel());
+        /** @var \Laravel\Cashier\Subscription|\Illuminate\Database\Eloquent\Model $billable */
+        $subscription = $subscriptionModel->find($subscriptionId);
+        return $subscription;
     }
 }
