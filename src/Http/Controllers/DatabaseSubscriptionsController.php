@@ -3,6 +3,7 @@
 namespace LimeDeck\NovaCashierOverview\Http\Controllers;
 
 use Laravel\Cashier\Subscription;
+use Stripe\Subscription as StripeSubscription;
 
 class DatabaseSubscriptionsController extends Controller
 {
