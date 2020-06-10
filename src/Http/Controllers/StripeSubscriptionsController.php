@@ -17,8 +17,12 @@ class StripeSubscriptionsController extends Controller
      */
     public function show($subscriptionId)
     {
-        /** @var \Laravel\Cashier\Subscription $subscription */
-        $subscription = Subscription::find($subscriptionId);
+        $stripeModel = $this->config->get('cashier.subscription_model');
+
+        /** @var \Illuminate\Database\Eloquent\Model $billableModel */
+        $subscriptionModel = (new $stripeModel());
+        /** @var \Laravel\Cashier\Subscription|\Illuminate\Database\Eloquent\Model $billable */
+        $subscription = $billableModel->find($subscriptionId);
 
         if (! $subscription) {
             return [
