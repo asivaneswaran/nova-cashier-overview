@@ -1,5 +1,5 @@
 {
-    "name": "limedeck/nova-cashier-overview",
+    "name": "asivaneswaran/nova-cashier-overview",
     "description": "Interact with your Stripe subscriptions directly inside Nova.",
     "keywords": [
         "laravel",
