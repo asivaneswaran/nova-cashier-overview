@@ -41,7 +41,7 @@ class StripeSubscriptionsController extends Controller
     {
         $subscription = $this->getSubscription($subscriptionId);
 
-        $subscription->swap($this->request->input('plan'));
+        $subscription->swapAndInvoice($this->request->input('plan'));
 
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
@@ -165,9 +165,9 @@ class StripeSubscriptionsController extends Controller
     {
         $stripeModel = env('CASHIER_SUBSCRIPTION_MODEL', Laravel\Cashier\Subscription::class);
 
-        /** @var \Illuminate\Database\Eloquent\Model $billableModel */
+        /** @var \Illuminate\Database\Eloquent\Model $subscriptionModel */
         $subscriptionModel = (new $stripeModel());
-        /** @var \Laravel\Cashier\Subscription|\Illuminate\Database\Eloquent\Model $billable */
+        /** @var \Laravel\Cashier\Subscription|\Illuminate\Database\Eloquent\Model $subscription */
         $subscription = $subscriptionModel->find($subscriptionId);
         return $subscription;
     }
