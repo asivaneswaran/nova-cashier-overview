@@ -97,7 +97,7 @@ class StripeSubscriptionsController extends Controller
             'plan_amount' => $stripeSubscription->plan->amount,
             'plan_interval' => $stripeSubscription->plan->interval,
             'plan_currency' => $stripeSubscription->plan->currency,
-            'plan' => $subscription->stripe_plan,
+            'plan' => $stripeSubscription->plan->nickname,
             'stripe_plan' => $stripeSubscription->plan->id,
             'ended' => $subscription->ended(),
             'cancelled' => $subscription->cancelled(),
