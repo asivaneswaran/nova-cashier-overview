@@ -159,16 +159,21 @@ class StripeSubscriptionsController extends Controller
      */
     protected function formatPaymentMethods($methods)
     {
-        return collect($methods)->map(function ($method) {
+        $data = collect($methods)->map(function ($method) {
+            if(is_null($method->card))
+                return [];
+
             return [
-                'id'         => $method->id,
-                'brand'      => $method->brand,
-                'country'    => $method->country,
-                'last_4'     => $method->last4,
-                'expiration' => $method->exp_month.'/'.$method->exp_year,
+                'id'         => $method->card->id,
+                'brand'      => $method->card->brand,
+                'country'    => $method->card->country,
+                'last_4'     => $method->card->last4,
+                'expiration' => $method->card->exp_month.'/'.$method->card->exp_year,
                 'link'       => config('uleague.urls.payment-method') . '/remove/',
             ];
         })->toArray();
+
+        return array_filter($data);
     }
 
     /**
