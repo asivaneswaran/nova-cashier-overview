@@ -52,7 +52,7 @@
             <a
               v-if="method.link"
               :href="method.link"
-              class="btn btn-outline text-sm btn-danger"
+              class="btn btn-outline-danger text-sm"
               target="_blank"
             >
               Delete
