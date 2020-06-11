@@ -7,16 +7,16 @@
     </div>
 
     <div class="overflow-hidden overflow-x-auto relative">
-      <table 
-        cellpadding="0" 
-        cellspacing="0" 
-        data-testid="resource-table" 
+      <table
+        cellpadding="0"
+        cellspacing="0"
+        data-testid="resource-table"
         class="table w-full">
         <thead>
           <tr>
-            <th 
-              v-for="item in columns" 
-              :key="item.label" 
+            <th
+              v-for="item in columns"
+              :key="item.label"
               class="text-left">
               <span class="cursor-pointer inline-flex items-center">
                 {{ item.label }}
@@ -25,8 +25,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr 
-            v-for="invoice in invoices" 
+          <tr
+            v-for="invoice in invoices"
             :key="invoice.id">
             <td>
               <span class="whitespace-no-wrap text-left">
@@ -52,7 +52,7 @@
               <a
                 v-if="invoice.link"
                 :href="invoice.link"
-                class="btn btn-outline text-sm"
+                class="btn btn-default bg-primary text-sm text-white"
                 target="_blank"
               >
                 View
