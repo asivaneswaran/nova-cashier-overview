@@ -14,6 +14,7 @@
         :subscription="stripeSubscription"
         :invoices="invoices"
         :plans="plans"
+        :methods="methods"
         :loading="loading.stripe"
         @manage-clicked="fetchStripeSubscription"
         @update-plan="updatePlan"
@@ -59,6 +60,7 @@ export default {
     stripeSubscription: null,
     invoices: [],
     plans: [],
+    methods: [],
   }),
 
   computed: {
@@ -92,6 +94,7 @@ export default {
           this.stripeSubscription = res.data.subscription;
           this.invoices = res.data.invoices;
           this.plans = res.data.plans;
+          this.methods = res.data.methods;
           this.loading.stripe = false;
         });
     },
