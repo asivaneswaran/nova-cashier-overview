@@ -117,7 +117,7 @@
 
     <payment-methods-table
       v-if="payment_methods.length"
-      :invoices="payment_methods" />
+      :methods="payment_methods" />
   </loading-view>
 </template>
 
@@ -145,6 +145,10 @@ export default {
       default: null,
     },
     invoices: {
+      type: Array,
+      default: () => [],
+    },
+    payment_methods: {
       type: Array,
       default: () => [],
     },

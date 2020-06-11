@@ -26,32 +26,32 @@
         </thead>
         <tbody>
         <tr
-          v-for="invoice in invoices"
-          :key="invoice.id">
+          v-for="method in methods"
+          :key="method.id">
           <td>
               <span class="whitespace-no-wrap text-left">
-                {{ invoice.brand || '-' }}
+                {{ method.brand || '-' }}
               </span>
           </td>
           <td>
               <span class="whitespace-no-wrap text-left">
-                {{ invoice.country }}
+                {{ method.country }}
               </span>
           </td>
           <td>
               <span class="whitespace-no-wrap text-left">
-                {{ invoice.last_4 }}
+                {{ method.last_4 }}
               </span>
           </td>
           <td>
               <span class="whitespace-no-wrap text-left">
-                {{ invoice.expiration }}
+                {{ method.expiration }}
               </span>
           </td>
           <td class="text-right">
             <a
-              v-if="invoice.link"
-              :href="invoice.link"
+              v-if="method.link"
+              :href="method.link"
               class="btn btn-outline text-sm"
               target="_blank"
             >
@@ -70,7 +70,7 @@
     name: 'PaymentMethodsTable',
 
     props: {
-      invoices: {
+      methods: {
         type: Array,
         default: () => [],
       },
