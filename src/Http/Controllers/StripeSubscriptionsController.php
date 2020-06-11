@@ -29,7 +29,7 @@ class StripeSubscriptionsController extends Controller
             'subscription'    => $this->formatSubscription($subscription),
             'plans'           => $this->formatPlans(Plan::all(['limit' => 100])),
             'invoices'        => $this->formatInvoices($subscription->owner->invoicesIncludingPending()),
-            'payment_methods' => $this->formatPaymentMethods($subscription->owner->paymentMethods()->map(function (
+            'methods' => $this->formatPaymentMethods($subscription->owner->paymentMethods()->map(function (
                 $paymentMethod
             ) {
                 return $paymentMethod->asStripePaymentMethod();
