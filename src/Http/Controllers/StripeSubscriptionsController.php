@@ -26,9 +26,14 @@ class StripeSubscriptionsController extends Controller
         }
 
         return [
-            'subscription' => $this->formatSubscription($subscription),
-            'plans'        => $this->formatPlans(Plan::all(['limit' => 100])),
-            'invoices'     => $this->formatInvoices($subscription->owner->invoicesIncludingPending()),
+            'subscription'    => $this->formatSubscription($subscription),
+            'plans'           => $this->formatPlans(Plan::all(['limit' => 100])),
+            'invoices'        => $this->formatInvoices($subscription->owner->invoicesIncludingPending()),
+            'payment_methods' => $this->formatPaymentMethods($subscription->owner->paymentMethods()->map(function (
+                $paymentMethod
+            ) {
+                return $paymentMethod->asStripePaymentMethod();
+            })),
         ];
     }
 
@@ -144,6 +149,24 @@ class StripeSubscriptionsController extends Controller
                 'period_end'   => $this->formatDate($invoice->period_end),
                 'link'         => $invoice->hosted_invoice_url,
                 'subscription' => $invoice->subscription,
+            ];
+        })->toArray();
+    }
+
+    /**
+     * @param $methods
+     * @return array
+     */
+    protected function formatPaymentMethods($methods)
+    {
+        return collect($methods)->map(function ($method) {
+            return [
+                'id'         => $method->id,
+                'brand'      => $method->brand,
+                'country'    => $method->country,
+                'last_4'     => $method->last4,
+                'expiration' => $method->exp_month.'/'.$method->exp_year,
+                'link'       => config('uleague.urls.payment-method') . '/remove/',
             ];
         })->toArray();
     }

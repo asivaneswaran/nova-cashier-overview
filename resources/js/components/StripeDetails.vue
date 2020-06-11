@@ -114,12 +114,17 @@
     <invoices-table
       v-if="invoices.length"
       :invoices="invoices" />
+
+    <payment-methods-table
+      v-if="payment_methods.length"
+      :invoices="payment_methods" />
   </loading-view>
 </template>
 
 <script>
 import DisplayRow from './DisplayRow';
 import InvoicesTable from './InvoicesTable';
+import PaymentMethodsTable from './PaymentMethodsTable';
 
 export default {
   name: 'StripeDetails',
@@ -127,6 +132,7 @@ export default {
   components: {
     DisplayRow,
     InvoicesTable,
+    PaymentMethodsTable,
   },
 
   props: {
